@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Start Java — Aprenda Java do zero</title>
+    <script src="https://cjrtnc.leaningtech.com/4.3/loader.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- Elemento usado pelo CheerpJ (JVM que roda no navegador) apenas para
+         exibir janelas gráficas Java (Swing/AWT), caso algum exercício
+         futuro use interface gráfica. A saída de texto (System.out/
+         System.err) NÃO passa por aqui: o CheerpJ manda tudo direto para o
+         console de depuração do navegador (console.log/console.error), e é
+         isso que o componente CodePlayground intercepta em tempo de
+         execução para mostrar na tela. -->
+    <div id="output" style="display:none"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
