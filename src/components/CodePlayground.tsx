@@ -27,26 +27,53 @@ function CodePlayground({ challenge }: CodePlaygroundProps) {
         setErrorOutput(null);
 
         try {
-            const response = await fetch("https://ce.judge0.com/submissions?wait=true", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    language_id: 62,
-                    source_code: code,
-                }),
-            });
+            // Converte o código para Base64 de forma segura em UTF-8
+            const encodedCode = btoa(
+                encodeURIComponent(code).replace(/%([0-9A-F]{2})/g, (_, p1) =>
+                    String.fromCharCode(parseInt(p1, 16))
+                )
+            );
 
-            if (!response.ok) {
-                throw new Error("Erro de comunicação com o servidor de execução.");
-            }
+            // Adiciona base64_encoded=true na URL do Judge0
+            const response = await fetch(
+                "https://ce.judge0.com/submissions?wait=true&base64_encoded=true",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        language_id: 62, // Java (OpenJDK 13.0.1)
+                        source_code: encodedCode,
+                    }),
+                }
+            );
 
             const data = await response.json();
 
-            const stdout = data.stdout ? data.stdout.trim() : "";
-            const stderr = data.stderr ? data.stderr.trim() : "";
-            const compileOutput = data.compile_output ? data.compile_output.trim() : "";
+            if (!response.ok) {
+                throw new Error(data.message || `Erro no servidor (${response.status})`);
+            }
+
+            // Função auxiliar para decodificar a resposta em Base64
+            const decodeBase64 = (str: string | null) => {
+                if (!str) return "";
+                try {
+                    return decodeURIComponent(
+                        Array.prototype.map
+                            .call(atob(str), (c: string) =>
+                                "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2)
+                            )
+                            .join("")
+                    );
+                } catch {
+                    return atob(str);
+                }
+            };
+
+            const stdout = decodeBase64(data.stdout).trim();
+            const stderr = decodeBase64(data.stderr).trim();
+            const compileOutput = decodeBase64(data.compile_output).trim();
 
             if (compileOutput) {
                 setErrorOutput(compileOutput);
