@@ -166,7 +166,7 @@ function CodePlayground({ challenge }: CodePlaygroundProps) {
     const errorHint = errorOutput ? friendlyErrorHint(errorOutput) : null;
 
     return (
-        <section className="mt-12 bg-slate-900 border border-slate-800 rounded-xl p-6">
+        <section className="mt-12 bg-slate-900 border border-slate-800 rounded-xl p-4 sm:p-6">
             <h3 className="text-2xl font-bold text-white mb-3">
                 💻 Pratique agora
             </h3>
@@ -178,6 +178,7 @@ function CodePlayground({ challenge }: CodePlaygroundProps) {
                 onKeyDown={handleKeyDown}
                 spellCheck={false}
                 disabled={loading}
+                aria-label="Editor de código Java"
                 className="
                     w-full h-64 bg-slate-950 text-gray-100
                     font-mono text-sm p-4 rounded-lg
@@ -193,7 +194,7 @@ function CodePlayground({ challenge }: CodePlaygroundProps) {
                     onClick={handleRun}
                     disabled={loading}
                     className="
-                        bg-orange-500 hover:bg-orange-600
+                        bg-orange-700 hover:bg-orange-800
                         disabled:opacity-60 disabled:pointer-events-none
                         px-5 py-2.5 rounded-lg font-semibold text-white
                         cursor-pointer transition-all
@@ -216,7 +217,7 @@ function CodePlayground({ challenge }: CodePlaygroundProps) {
             </div>
 
             {output !== null && (
-                <div className="mt-4">
+                <div className="mt-4" aria-live="polite">
                     <p className="text-sm text-gray-400 mb-1">Saída:</p>
                     <pre
                         className="
@@ -230,7 +231,7 @@ function CodePlayground({ challenge }: CodePlaygroundProps) {
             )}
 
             {errorOutput !== null && (
-                <div className="mt-4">
+                <div className="mt-4" aria-live="polite">
                     <p className="text-sm text-gray-400 mb-1">Erro:</p>
                     <pre
                         className="
